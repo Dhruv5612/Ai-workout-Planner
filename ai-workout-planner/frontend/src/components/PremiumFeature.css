@@ -1,0 +1,102 @@
+.premium-feature {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.premium-overlay-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  padding: 2rem;
+  text-align: center;
+  color: white;
+}
+
+.premium-lock-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.premium-overlay-content h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #1bedc7;
+}
+
+.premium-overlay-content p {
+  color: #aab0be;
+  margin-bottom: 1.5rem;
+  max-width: 300px;
+}
+
+.premium-preview {
+  background: rgba(27, 237, 199, 0.1);
+  border: 1px solid #1bedc7;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  max-width: 400px;
+}
+
+.premium-preview h4 {
+  color: #1bedc7;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.premium-preview p {
+  color: #aab0be;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.premium-unlock-btn {
+  background: linear-gradient(135deg, #1bedc7, #15d4b0);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.premium-unlock-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(27, 237, 199, 0.4);
+}
+
+.premium-blur {
+  filter: blur(3px);
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .premium-overlay-content {
+    padding: 1rem;
+  }
+  
+  .premium-lock-icon {
+    font-size: 2rem;
+  }
+  
+  .premium-overlay-content h3 {
+    font-size: 1.2rem;
+  }
+  
+  .premium-preview {
+    max-width: 100%;
+  }
+}

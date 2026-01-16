@@ -1,0 +1,79 @@
+.home {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+  background: #000000 url('/images/photo2.jpg') center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.hero-bg {
+  min-height: 100vh;
+  background: #181a1b;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 5vw;
+}
+.hero-content {
+  max-width: 500px;
+  color: #fff;
+}
+.hero-title {
+  font-size: 2.8rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  letter-spacing: -1px;
+}
+.hero-sub {
+  font-size: 1.1rem;
+  margin-bottom: 2.5rem;
+  color: #e0e0e0;
+}
+.cta-btn {
+  background: #1de9b6;
+  color: #181a1b;
+  font-size: 1.3rem;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  padding: 1rem 2.5rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.cta-btn:hover {
+  background: #13c9a7;
+}
+.phone-mockup-img {
+  width: 180px;
+  height: 360px;
+  object-fit: cover;
+  border-radius: 32px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  margin-bottom: 1rem;
+}
+.hero-phones {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: flex-end;
+}
+@media (max-width: 900px) {
+  .hero-bg {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 2vw;
+  }
+  .hero-phones {
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+    margin-top: 2rem;
+  }
+  .phone-mockup-img {
+    margin-bottom: 0;
+  }
+} 

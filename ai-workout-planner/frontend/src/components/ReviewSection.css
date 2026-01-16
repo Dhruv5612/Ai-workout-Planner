@@ -1,0 +1,141 @@
+.review-section {
+  position: relative;
+  padding: 6rem 0;
+  background: #000000;
+  overflow: hidden;
+}
+
+.review-content {
+  width: 100%;
+  padding: 0 5vw;
+  text-align: center;
+}
+
+.quote-icon {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 2rem;
+  opacity: 0.7;
+}
+
+.review-title {
+  font-family: 'Abolition', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 500;
+  line-height: 1.2;
+  margin-bottom: 3rem;
+  color: #ffffff;
+}
+
+.review-cards {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 3rem;
+}
+
+.review-card {
+  background: white;
+  border-radius: 20px;
+  padding: 3rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  width: 100%;
+}
+
+.star-container {
+  display: flex;
+  justify-content: center;
+  gap: 0.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.star-icon {
+  color: #1bedc7;
+  font-size: 1.5rem;
+}
+
+.review-main {
+  text-align: left;
+}
+
+.review-text {
+  font-size: 1.25rem;
+  line-height: 1.7;
+  color: #111111;
+  margin-bottom: 2rem;
+  font-style: italic;
+}
+
+.review-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.review-name {
+  font-weight: 600;
+  color: #111111;
+  font-size: 1.1rem;
+}
+
+.review-date {
+  color: #555555;
+  font-size: 0.9rem;
+}
+
+.review-pagination {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 0.5rem;
+}
+
+.pagination-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ddd;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.pagination-dot.active {
+  background: #1bedc7;
+  transform: scale(1.2);
+}
+
+.pagination-dot:hover {
+  background: #1bedc7;
+  transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+  .review-section {
+    padding: 4rem 0;
+  }
+  
+  .review-content {
+    padding: 0 1rem;
+  }
+  
+  .review-title {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .review-card {
+    padding: 2rem;
+  }
+  
+  .review-text {
+    font-size: 1.1rem;
+  }
+  
+  .review-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+} 

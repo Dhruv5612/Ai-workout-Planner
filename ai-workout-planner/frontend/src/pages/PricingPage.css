@@ -1,0 +1,376 @@
+.pricing-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f1115 0%, #1a1d23 100%);
+  color: #fff;
+  padding-top: 80px;
+}
+
+.pricing-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.pricing-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.pricing-header h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #1bedc7, #15d4b0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.pricing-header p {
+  font-size: 1.2rem;
+  color: #aab0be;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.pricing-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-bottom: 4rem;
+}
+
+.pricing-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 2rem;
+  text-align: center;
+  position: relative;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.pricing-card:hover {
+  transform: translateY(-5px);
+  border-color: #1bedc7;
+}
+
+.pricing-card.premium {
+  border-color: #1bedc7;
+  background: linear-gradient(135deg, rgba(27, 237, 199, 0.1), rgba(21, 212, 176, 0.05));
+}
+
+.pricing-card.yearly {
+  border-color: #ff6b6b;
+  background: linear-gradient(135deg, rgba(255, 107, 107, 0.1), rgba(238, 90, 82, 0.05));
+}
+
+.plan-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #1bedc7, #15d4b0);
+  color: white;
+  padding: 0.5rem 1.5rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.plan-badge.savings {
+  background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+}
+
+.plan-header h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #fff;
+}
+
+.price {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #1bedc7;
+}
+
+.price .period {
+  font-size: 1rem;
+  color: #aab0be;
+  font-weight: 400;
+}
+
+.pricing-card.yearly .price {
+  color: #ff6b6b;
+}
+
+.plan-header p {
+  color: #aab0be;
+  margin-bottom: 2rem;
+}
+
+.features-list {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.features-list li {
+  padding: 0.5rem 0;
+  color: #e1e5e9;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.features-list li:before {
+  content: "✓";
+  color: #1bedc7;
+  font-weight: 700;
+}
+
+.plan-btn {
+  width: 100%;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 1rem;
+}
+
+.free-btn {
+  background: #2a2e39;
+  color: #aab0be;
+  cursor: not-allowed;
+}
+
+.premium-btn {
+  background: linear-gradient(135deg, #1bedc7, #15d4b0);
+  color: white;
+}
+
+.yearly-btn {
+  background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+  color: white;
+}
+
+.premium-btn:hover,
+.yearly-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(27, 237, 199, 0.4);
+}
+
+.yearly-btn:hover {
+  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+}
+
+.trial-text {
+  color: #aab0be;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.comparison-section {
+  margin-bottom: 4rem;
+}
+
+.comparison-section h2 {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: #fff;
+}
+
+.comparison-table {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(27, 237, 199, 0.2);
+}
+
+.comparison-header {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  background: linear-gradient(135deg, #1bedc7, #15d4b0);
+  color: white;
+}
+
+.feature-column,
+.plan-column {
+  padding: 1.5rem 1rem;
+  font-weight: 600;
+  font-size: 1.1rem;
+  text-align: center;
+}
+
+.plan-column.free {
+  background: rgba(255, 255, 255, 0.1);
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.comparison-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  border-bottom: 1px solid rgba(27, 237, 199, 0.1);
+}
+
+.comparison-row:last-child {
+  border-bottom: none;
+}
+
+.feature-name {
+  padding: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.feature-free,
+.feature-premium {
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #aab0be;
+  text-align: center;
+}
+
+.feature-premium {
+  background: rgba(27, 237, 199, 0.05);
+}
+
+.check {
+  color: #1bedc7;
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.faq-section h2 {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: #fff;
+}
+
+.faq-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.faq-item {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.faq-item h3 {
+  color: #1bedc7;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.faq-item p {
+  color: #aab0be;
+  line-height: 1.6;
+}
+
+.premium-active-card {
+  background: linear-gradient(135deg, rgba(27, 237, 199, 0.1), rgba(21, 212, 176, 0.05));
+  border: 2px solid #1bedc7;
+  border-radius: 16px;
+  padding: 3rem;
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.premium-check {
+  font-size: 4rem;
+  color: #1bedc7;
+  margin-bottom: 1rem;
+}
+
+.premium-active-card h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #fff;
+}
+
+.premium-active-card p {
+  color: #aab0be;
+  margin-bottom: 2rem;
+}
+
+.premium-active-card ul {
+  list-style: none;
+  padding: 0;
+  text-align: left;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.premium-active-card li {
+  padding: 0.5rem 0;
+  color: #e1e5e9;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.premium-active-card li:before {
+  content: "✓";
+  color: #1bedc7;
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  .pricing-container {
+    padding: 1rem;
+  }
+  
+  .pricing-header h1 {
+    font-size: 2rem;
+  }
+  
+  .pricing-cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .comparison-header,
+  .comparison-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  
+  .feature-column,
+  .plan-column,
+  .feature-name,
+  .feature-free,
+  .feature-premium {
+    padding: 0.75rem;
+  }
+  
+  .plan-column {
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .feature-premium {
+    border-top: 1px solid rgba(27, 237, 199, 0.1);
+  }
+  
+  .faq-grid {
+    grid-template-columns: 1fr;
+  }
+}

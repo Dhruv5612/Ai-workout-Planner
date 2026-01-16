@@ -1,0 +1,127 @@
+.feature-section {
+  position: relative;
+  padding: 6rem 0;
+  background: #000000;
+  overflow: hidden;
+}
+
+.feature-section:nth-child(even) {
+  background: #000000;
+}
+
+.feature-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.1;
+  z-index: 1;
+}
+
+.feature-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 5vw;
+  gap: 4rem;
+}
+
+.feature-section.reverse .feature-content {
+  flex-direction: row-reverse;
+}
+
+.feature-text {
+  flex: 1;
+}
+
+.feature-title {
+  font-family: 'Abolition', sans-serif;
+  font-size: 2.75rem;
+  font-weight: 500;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+  color: #ffffff;
+}
+
+.feature-subtitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1bedc7;
+  margin-bottom: 1rem;
+}
+
+.feature-description {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.feature-media {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.feature-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.feature-image:hover {
+  transform: translateY(-5px);
+}
+
+.feature-video {
+  max-width: 100%;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 1024px) {
+  .feature-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 3rem;
+  }
+  
+  .feature-section.reverse .feature-content {
+    flex-direction: column;
+  }
+  
+  .feature-title {
+    font-size: 2.25rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .feature-section {
+    padding: 4rem 0;
+  }
+  
+  .feature-content {
+    padding: 0 1rem;
+    gap: 2rem;
+  }
+  
+  .feature-title {
+    font-size: 1.875rem;
+  }
+  
+  .feature-subtitle {
+    font-size: 1.125rem;
+  }
+  
+  .feature-description {
+    font-size: 1rem;
+  }
+} 
