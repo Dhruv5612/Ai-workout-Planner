@@ -6,6 +6,7 @@ import ProfilePage from './pages/ProfilePage';
 import StorePage from './pages/StorePage';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
+import ForgotPassword from './pages/ForgotPassword';
 import ExercisePage from './pages/ExercisePage';
 import ArticlesPage from './pages/ArticlesPage';
 import ToolsPage from './pages/ToolsPage';
@@ -23,6 +24,7 @@ function App() {
         <Route path="/store" element={<StorePage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/exercises" element={<ExercisePage />} />
         <Route path="/articles" element={<ArticlesPage />} />
         <Route path="/tools" element={<ToolsPage />} />
@@ -34,4 +36,4 @@ function App() {
   );
 }
 
-export default App; 
+export default App;

@@ -1,14 +1,19 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models').User;
+const { User, Otp } = require('../models');
+const { generateOtp, sendOtpEmail } = require('../services/emailService');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'dev_secret_change_me';
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '15m';
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
 const REFRESH_SECRET = process.env.REFRESH_SECRET || 'dev_refresh_change_me';
 const REFRESH_EXPIRES_IN = process.env.REFRESH_EXPIRES_IN || '30d';
 const REFRESH_COOKIE_NAME = process.env.REFRESH_COOKIE_NAME || 'refresh_token';
 
 function signAccessToken(user) {
-  return jwt.sign({ id: user._id, username: user.username }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+  return jwt.sign(
+    { id: user._id, username: user.username, email: user.email },
+    JWT_SECRET,
+    { expiresIn: JWT_EXPIRES_IN }
+  );
 }
 
 function signRefreshToken(user) {
@@ -25,95 +30,324 @@ function setRefreshCookie(res, token) {
   });
 }
 
+/**
+ * Step 1: Register (Initiate Signup with OTP)
+ */
 exports.register = async (req, res) => {
   try {
-    console.log('Register request body:', req.body);
     const { email, password, username, firstName, lastName } = req.body;
 
-    if (!email || !password || !username || !firstName || !lastName) {
-      console.log('Missing required fields');
+    if (!email || !password || !firstName || !lastName) {
       return res.status(400).json({ message: 'Missing required fields' });
     }
 
-    console.log('Checking for existing email:', email);
-    const existingByEmail = await User.findOne({ email });
+    const cleanEmail = email.toLowerCase().trim();
+    const cleanUsername = (username || cleanEmail.split('@')[0]).trim();
+
+    // Check if user already exists
+    const existingByEmail = await User.findOne({ email: cleanEmail });
     if (existingByEmail) {
-      console.log('Email already exists:', email);
-      return res.status(409).json({ message: 'Email already in use' });
+      return res.status(409).json({ message: 'An account with this email already exists' });
     }
 
-    console.log('Checking for existing username:', username);
-    const existingByUsername = await User.findOne({ username });
+    const existingByUsername = await User.findOne({ username: cleanUsername });
     if (existingByUsername) {
-      console.log('Username already exists:', username);
-      return res.status(409).json({ message: 'Username already in use' });
+      return res.status(409).json({ message: 'Username is already taken' });
     }
 
-    console.log('Creating new user:', { email, username, firstName, lastName });
-    const user = new User({ 
-      email, 
-      password, 
-      name: `${firstName} ${lastName}`,
-      username: username || email.split('@')[0] // Use email prefix as username if not provided
-    });
-    await user.save();
-    console.log('User saved successfully:', user._id);
+    // Generate 6-digit OTP
+    const otp = generateOtp();
 
+    // Store in Otp collection (expires in 10 minutes)
+    await Otp.deleteMany({ email: cleanEmail, purpose: 'signup' });
+    await Otp.create({
+      email: cleanEmail,
+      otp,
+      purpose: 'signup',
+      tempData: {
+        email: cleanEmail,
+        password,
+        username: cleanUsername,
+        firstName: firstName.trim(),
+        lastName: lastName.trim()
+      }
+    });
+
+    // Send OTP email
+    await sendOtpEmail(cleanEmail, otp, 'signup');
+
+    return res.status(200).json({
+      requireOtp: true,
+      email: cleanEmail,
+      message: `Verification code sent to ${cleanEmail}`
+    });
+  } catch (err) {
+    console.error('[Registration Error]:', err);
+    return res.status(500).json({ message: 'Registration failed', error: err.message });
+  }
+};
+
+/**
+ * Step 2: Verify Signup OTP & Create Account
+ */
+exports.verifySignupOtp = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+    if (!email || !otp) {
+      return res.status(400).json({ message: 'Email and OTP code are required' });
+    }
+
+    const cleanEmail = email.toLowerCase().trim();
+    const cleanOtp = otp.toString().trim();
+
+    // Find valid OTP record
+    const record = await Otp.findOne({ email: cleanEmail, purpose: 'signup', otp: cleanOtp });
+    if (!record) {
+      return res.status(400).json({ message: 'Invalid or expired OTP code' });
+    }
+
+    const { tempData } = record;
+    if (!tempData) {
+      return res.status(400).json({ message: 'Registration session expired. Please sign up again.' });
+    }
+
+    // Create verified user
+    const user = new User({
+      email: tempData.email,
+      password: tempData.password,
+      name: `${tempData.firstName} ${tempData.lastName}`,
+      username: tempData.username,
+      isEmailVerified: true
+    });
+
+    await user.save();
+
+    // Clean up OTP
+    await Otp.deleteMany({ email: cleanEmail, purpose: 'signup' });
+
+    // Issue tokens
     const accessToken = signAccessToken(user);
     const refreshToken = signRefreshToken(user);
     setRefreshCookie(res, refreshToken);
 
     return res.status(201).json({
-      message: 'User registered successfully',
+      message: 'Account verified and created successfully!',
       token: accessToken,
-      user: user.getPublicProfile(),
+      user: user.getPublicProfile()
     });
   } catch (err) {
-    console.error('Registration error:', err);
-    return res.status(500).json({ message: 'Registration failed', error: err.message });
+    console.error('[Verify Signup OTP Error]:', err);
+    return res.status(500).json({ message: 'Verification failed', error: err.message });
   }
 };
 
+/**
+ * Step 1: Login (Verify credentials & send OTP)
+ */
 exports.login = async (req, res) => {
   try {
-    console.log('Login request body:', req.body);
     const { emailOrUsername, password } = req.body;
     if (!emailOrUsername || !password) {
-      console.log('Missing credentials');
       return res.status(400).json({ message: 'Missing credentials' });
     }
 
-    console.log('Finding user by email or username:', emailOrUsername);
-    const user = await User.findOne({ $or: [ { email: emailOrUsername }, { username: emailOrUsername } ] }).select('+password');
+    const cleanInput = emailOrUsername.trim().toLowerCase();
+    const user = await User.findOne({
+      $or: [{ email: cleanInput }, { username: cleanInput }]
+    }).select('+password');
+
     if (!user) {
-      console.log('User not found:', emailOrUsername);
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(401).json({ message: 'Invalid email or password' });
     }
 
-    console.log('Comparing password for user:', user._id);
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
-      console.log('Password mismatch for user:', user._id);
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(401).json({ message: 'Invalid email or password' });
     }
+
+    // Credentials match! Generate and send OTP for 2-factor authentication
+    const otp = generateOtp();
+    await Otp.deleteMany({ email: user.email, purpose: 'login' });
+    await Otp.create({
+      email: user.email,
+      otp,
+      purpose: 'login'
+    });
+
+    await sendOtpEmail(user.email, otp, 'login');
+
+    return res.json({
+      requireOtp: true,
+      email: user.email,
+      message: `A 6-digit login verification code was sent to ${user.email}`
+    });
+  } catch (err) {
+    console.error('[Login Error]:', err);
+    return res.status(500).json({ message: 'Login failed', error: err.message });
+  }
+};
+
+/**
+ * Step 2: Verify Login OTP
+ */
+exports.verifyLoginOtp = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+    if (!email || !otp) {
+      return res.status(400).json({ message: 'Email and OTP code are required' });
+    }
+
+    const cleanEmail = email.toLowerCase().trim();
+    const cleanOtp = otp.toString().trim();
+
+    // Verify OTP record
+    const record = await Otp.findOne({ email: cleanEmail, purpose: 'login', otp: cleanOtp });
+    if (!record) {
+      return res.status(400).json({ message: 'Invalid or expired OTP code' });
+    }
+
+    const user = await User.findOne({ email: cleanEmail });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Clean up OTP
+    await Otp.deleteMany({ email: cleanEmail, purpose: 'login' });
 
     user.lastLogin = new Date();
     user.loginCount = (user.loginCount || 0) + 1;
     await user.save();
-    console.log('User login updated:', user._id);
 
     const accessToken = signAccessToken(user);
     const refreshToken = signRefreshToken(user);
     setRefreshCookie(res, refreshToken);
 
     return res.json({
-      message: 'Login successful',
+      message: 'Login successful!',
       token: accessToken,
-      user: user.getPublicProfile(),
+      user: user.getPublicProfile()
     });
   } catch (err) {
-    console.error('Login error:', err);
-    return res.status(500).json({ message: 'Login failed', error: err.message });
+    console.error('[Verify Login OTP Error]:', err);
+    return res.status(500).json({ message: 'Login verification failed', error: err.message });
+  }
+};
+
+/**
+ * Resend OTP
+ */
+exports.resendOtp = async (req, res) => {
+  try {
+    const { email, purpose = 'login' } = req.body;
+    if (!email) {
+      return res.status(400).json({ message: 'Email is required' });
+    }
+
+    const cleanEmail = email.toLowerCase().trim();
+
+    // If signup, check that existing pending record exists
+    let existingTempData = null;
+    if (purpose === 'signup') {
+      const prevRecord = await Otp.findOne({ email: cleanEmail, purpose: 'signup' });
+      if (prevRecord && prevRecord.tempData) {
+        existingTempData = prevRecord.tempData;
+      }
+    }
+
+    const otp = generateOtp();
+    await Otp.deleteMany({ email: cleanEmail, purpose });
+    await Otp.create({
+      email: cleanEmail,
+      otp,
+      purpose,
+      tempData: existingTempData
+    });
+
+    await sendOtpEmail(cleanEmail, otp, purpose);
+
+    return res.json({
+      message: `A fresh code has been sent to ${cleanEmail}`
+    });
+  } catch (err) {
+    console.error('[Resend OTP Error]:', err);
+    return res.status(500).json({ message: 'Failed to resend code', error: err.message });
+  }
+};
+
+/**
+ * Forgot Password - Send OTP
+ */
+exports.forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ message: 'Email is required' });
+    }
+
+    const cleanEmail = email.toLowerCase().trim();
+    const user = await User.findOne({ email: cleanEmail });
+    if (!user) {
+      // For security, don't reveal if user does not exist
+      return res.json({ message: 'If an account exists, a reset code was sent.' });
+    }
+
+    const otp = generateOtp();
+    await Otp.deleteMany({ email: cleanEmail, purpose: 'reset_password' });
+    await Otp.create({
+      email: cleanEmail,
+      otp,
+      purpose: 'reset_password'
+    });
+
+    await sendOtpEmail(cleanEmail, otp, 'reset_password');
+
+    return res.json({
+      message: `Password reset code sent to ${cleanEmail}`
+    });
+  } catch (err) {
+    console.error('[Forgot Password Error]:', err);
+    return res.status(500).json({ message: 'Failed to process request', error: err.message });
+  }
+};
+
+/**
+ * Reset Password with OTP
+ */
+exports.resetPasswordWithOtp = async (req, res) => {
+  try {
+    const { email, otp, newPassword } = req.body;
+    if (!email || !otp || !newPassword) {
+      return res.status(400).json({ message: 'Email, OTP, and new password are required' });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ message: 'Password must be at least 6 characters' });
+    }
+
+    const cleanEmail = email.toLowerCase().trim();
+    const cleanOtp = otp.toString().trim();
+
+    const record = await Otp.findOne({ email: cleanEmail, purpose: 'reset_password', otp: cleanOtp });
+    if (!record) {
+      return res.status(400).json({ message: 'Invalid or expired reset code' });
+    }
+
+    const user = await User.findOne({ email: cleanEmail });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    user.password = newPassword;
+    await user.save();
+
+    await Otp.deleteMany({ email: cleanEmail, purpose: 'reset_password' });
+
+    return res.json({
+      message: 'Password reset successfully! You can now log in.'
+    });
+  } catch (err) {
+    console.error('[Reset Password Error]:', err);
+    return res.status(500).json({ message: 'Failed to reset password', error: err.message });
   }
 };
 
@@ -142,4 +376,4 @@ exports.logout = async (req, res) => {
     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
   });
   return res.json({ message: 'Logged out successfully' });
-}; 
+};

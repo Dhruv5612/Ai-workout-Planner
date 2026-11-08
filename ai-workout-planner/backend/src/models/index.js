@@ -4,10 +4,12 @@ const User = require('./User');
 const { Exercise, WorkoutPlan, WorkoutSession, WorkoutTemplate } = require('./Workout');
 const Meal = require('./Meal');
 const Progress = require('./Progress');
+const Otp = require('./Otp');
 
 module.exports = {
   // User models
   User,
+  Otp,
   
   // Workout models
   Exercise,
@@ -20,4 +22,4 @@ module.exports = {
   
   // Progress models
   Progress
-}; 
+};
