@@ -1,123 +1,130 @@
-.admin-login-container {
+/* Spatial Glassmorphism Admin Login */
+.admin-login-container,
+.admin-login-page {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-  padding: 20px;
+  background: transparent;
+  padding: 2rem;
+  position: relative;
+  z-index: 1;
 }
 
 .admin-login-card {
-  background: #2a2a2a;
-  border-radius: 12px;
-  padding: 40px;
+  background: rgba(18, 24, 38, 0.75);
+  backdrop-filter: blur(32px) saturate(200%);
+  -webkit-backdrop-filter: blur(32px) saturate(200%);
+  border-radius: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-top: 1px solid rgba(157, 78, 221, 0.5);
+  box-shadow:
+    0 24px 60px rgba(0, 0, 0, 0.7),
+    0 0 40px rgba(157, 78, 221, 0.2),
+    inset 0 1px 1px rgba(255, 255, 255, 0.25);
+  padding: 3rem 2.5rem;
   width: 100%;
-  max-width: 400px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  border: 1px solid #333;
+  max-width: 480px;
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-login-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #9d4edd, #ff2a85);
+  box-shadow: 0 0 15px rgba(157, 78, 221, 0.6);
 }
 
 .admin-login-header {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 2rem;
 }
 
 .admin-login-header h1 {
-  color: #1de9b6;
-  font-size: 28px;
-  font-weight: 700;
-  margin-bottom: 8px;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, #ffffff 40%, #9d4edd 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .admin-login-header p {
-  color: #ccc;
-  font-size: 14px;
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.95rem;
 }
 
 .admin-login-form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 1.35rem;
 }
 
-.form-group {
+.admin-login-form .form-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 0.5rem;
 }
 
-.form-group label {
-  color: #fff;
-  font-weight: 500;
-  font-size: 14px;
+.admin-login-form label {
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 700;
+  font-size: 0.88rem;
 }
 
-.form-group input {
-  padding: 12px 16px;
-  border: 1px solid #444;
-  border-radius: 8px;
-  background: #1a1a1a;
-  color: #fff;
-  font-size: 14px;
-  transition: all 0.2s ease;
-}
-
-.form-group input:focus {
+.admin-login-form input {
+  padding: 0.9rem 1.25rem;
+  border-radius: 16px;
+  background: rgba(10, 14, 24, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-size: 1rem;
   outline: none;
-  border-color: #1de9b6;
-  box-shadow: 0 0 0 3px rgba(29, 233, 182, 0.1);
+  transition: all 0.25s ease;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
-.form-group input::placeholder {
-  color: #666;
-}
-
-.error-message {
-  background: #dc2626;
-  color: #fff;
-  padding: 12px;
-  border-radius: 8px;
-  font-size: 14px;
-  text-align: center;
+.admin-login-form input:focus {
+  border-color: #9d4edd;
+  box-shadow: 0 0 0 3px rgba(157, 78, 221, 0.25), inset 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
 .admin-login-btn {
-  background: #1de9b6;
-  color: #1a1a1a;
+  padding: 1rem 1.5rem;
+  border-radius: var(--radius-pill);
+  background: linear-gradient(135deg, #9d4edd 0%, #ff2a85 100%);
   border: none;
-  padding: 14px 24px;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 16px;
+  color: #ffffff;
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 800;
   cursor: pointer;
-  transition: all 0.2s ease;
-  margin-top: 10px;
+  box-shadow: 0 8px 25px rgba(157, 78, 221, 0.4);
+  transition: all 0.25s ease;
+  margin-top: 0.5rem;
 }
 
 .admin-login-btn:hover:not(:disabled) {
-  background: #17d4a8;
-  transform: translateY(-1px);
-}
-
-.admin-login-btn:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 35px rgba(157, 78, 221, 0.6);
 }
 
 .admin-login-footer {
-  margin-top: 30px;
-  padding: 20px;
-  background: #1a1a1a;
-  border-radius: 8px;
-  border: 1px solid #333;
-}
-
-.admin-login-footer p {
-  color: #ccc;
-  font-size: 12px;
-  margin: 4px 0;
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.55);
+  text-align: center;
 }
 
 .admin-login-footer strong {
-  color: #1de9b6;
+  color: #ffffff;
 }

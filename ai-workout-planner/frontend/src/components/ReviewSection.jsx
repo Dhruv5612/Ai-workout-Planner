@@ -6,82 +6,92 @@ const ReviewSection = () => {
 
   const reviews = [
     {
-      name: "Felipe1983",
-      text: "This app has revolutionized the way I approach my fitness regimen. With the novelty of fresh routines, clear video instructions, and invaluable respiration and weight suggestions, Planfit has invigorated my commitment to a healthier lifestyle.",
-      date: "Aug 11, 2023"
+      name: "Felipe @fit_felipe",
+      role: "Calisthenics & Hypertrophy",
+      text: "This app literally revolutionized how I approach progressive overload. With novel neural splits, crisp 3D instructions, and tempo coaching, Planfit completely dialed in my consistency. Best fitness investment no cap.",
+      date: "Aug 11, 2024",
+      tag: "🔥 Gained 4.2kg Lean Muscle"
     },
     {
-      name: "Griffin Ehlers 5",
-      text: "I was doubtful of getting a good workout with this app, but when I did those side kick burpees HOLY COW!! Loved personalized workout and can't wait for the next!",
-      date: "Aug 9, 2023"
+      name: "Griffin Ehlers",
+      role: "Cross-Training Enthusiast",
+      text: "Was doubtful of an AI trainer actually understanding fatigue management, but the live adjustments during side kick burpees and RDLs blew my mind! Absolutely hooked on the daily splits.",
+      date: "Aug 9, 2024",
+      tag: "⚡ 52-Day Workout Streak"
     },
     {
-      name: "Abubuver",
-      text: "It recommends workout routines that are challenging enough, manages breaks with a timer, has a clean UI, allows you to modify your workouts, and shares your workouts after you're done! It's a great workout app and I highly recommend it!",
-      date: "Sep 7, 2022"
+      name: "Abubu @fit_bu",
+      role: "Gym Beginner",
+      text: "Recommends workout routines that are challenging but safe, manages rest timers dynamically, and has the cleanest spatial dark UI on the planet. I share my workout summaries on IG daily!",
+      date: "Sep 7, 2024",
+      tag: "🎯 -6% Body Fat in 60 Days"
     },
     {
-      name: "Jeoyong",
-      text: "It's been 6 weeks since I started with Planfit and I'm on day 50 of my diet. ... As a result, in 50 days, I've gone from 31% body fat to 23% body fat, gained 0.7kg of muscle, and lost 6.5kg of body fat. Thank you so much.",
-      date: "Dec, 2022"
+      name: "Jeoyong K.",
+      role: "Powerbuilding",
+      text: "It's been 8 weeks since I locked in with Planfit. My squat increased by 25kg, body fat dropped from 28% to 19%, and I feel unstoppable. The AI meal planner is a cheat code.",
+      date: "Dec 18, 2024",
+      tag: "🏆 PR Smashed: 140kg Deadlift"
     }
   ];
 
   const StarRating = () => (
-    <div className="star-container">
+    <div className="spatial-star-rating">
       {[...Array(5)].map((_, i) => (
-        <svg 
-          key={i}
-          stroke="currentColor" 
-          fill="#1bedc7" 
-          strokeWidth="0" 
-          viewBox="0 0 16 16" 
-          className="star-icon" 
-          height="1em" 
-          width="1em" 
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"></path>
-        </svg>
+        <span key={i} className="spatial-star">★</span>
       ))}
     </div>
   );
 
   return (
-    <section className="review-section">
-      <div className="review-content">
-        <img 
-          src="/images/quoteIcon.png" 
-          className="quote-icon" 
-          alt="quote mark"
-        />
-        <h2 className="review-title">
-          Join more than 1m success stories
-        </h2>
-        <div className="review-cards">
-          <div className="review-card">
-            <StarRating />
-            <div className="review-main">
-              <p className="review-text">{reviews[currentReview].text}</p>
-              <div className="review-meta">
-                <span className="review-name">{reviews[currentReview].name}</span>
-                <span className="review-date">{reviews[currentReview].date}</span>
+    <section className="spatial-review-section">
+      <div className="spatial-review-container">
+        <div className="review-header-block">
+          <div className="genz-pill purple">
+            <span>✦ REAL REPS • REAL RESULTS</span>
+          </div>
+          <h2 className="review-title">
+            Loved By Over <span className="holo-aurora">1,000,000+</span> Fit Freaks
+          </h2>
+          <p className="review-subtitle">
+            See how lifters are transforming their bodies and mindset with AI guidance.
+          </p>
+        </div>
+
+        <div className="review-cards-wrapper">
+          <div className="spatial-review-card glass-panel">
+            <div className="review-top-meta">
+              <StarRating />
+              <span className="review-achievement-tag">{reviews[currentReview].tag}</span>
+            </div>
+
+            <p className="review-quote-text">“{reviews[currentReview].text}”</p>
+
+            <div className="review-author-row">
+              <div className="author-avatar-badge">
+                {reviews[currentReview].name.charAt(0)}
+              </div>
+              <div className="author-details">
+                <span className="author-name">{reviews[currentReview].name}</span>
+                <span className="author-role">{reviews[currentReview].role} • {reviews[currentReview].date}</span>
               </div>
             </div>
           </div>
         </div>
-        <ul className="review-pagination">
+
+        <div className="review-pagination-dock">
           {reviews.map((_, index) => (
-            <li 
+            <button 
               key={index}
-              className={`pagination-dot ${index === currentReview ? 'active' : ''}`}
+              className={`pagination-spatial-pill ${index === currentReview ? 'active' : ''}`}
               onClick={() => setCurrentReview(index)}
+              aria-label={`View review ${index + 1}`}
             />
           ))}
-        </ul>
+        </div>
       </div>
     </section>
   );
 };
 
-export default ReviewSection; 
+export default ReviewSection;

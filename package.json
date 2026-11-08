@@ -1,0 +1,12 @@
+{
+  "name": "ai-workout-planner-workspace",
+  "version": "1.0.0",
+  "description": "AI Workout Planner Monorepo Workspace",
+  "scripts": {
+    "start:backend": "cd ai-workout-planner/backend && npm start",
+    "dev:backend": "cd ai-workout-planner/backend && npm run dev",
+    "start:frontend": "cd ai-workout-planner/frontend && npm start",
+    "build:frontend": "cd ai-workout-planner/frontend && npm run build"
+  }
+}
+

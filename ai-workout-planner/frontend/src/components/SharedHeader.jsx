@@ -1,74 +1,89 @@
-import React from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import './SharedHeader.css';
 import { useAuth } from '../context/AuthContext';
 import ProfileDropdown from './ProfileDropdown';
 
 const SharedHeader = () => {
   const location = useLocation();
-  const navigate = useNavigate();
   const currentPath = location.pathname;
   const { user, isPremium } = useAuth();
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const navigationItems = [
     { path: '/articles', name: 'Articles' },
     { path: '/exercises', name: 'Exercises' },
-    { path: '/tools', name: 'Tools' }
+    { path: '/tools', name: 'AI Tools', hot: true }
   ];
 
-  // Filter out the current page from navigation
-  const filteredNavigation = navigationItems.filter(item => item.path !== currentPath);
-
-  const handleGetPlanClick = () => {
-    console.log('Button clicked, navigating to /pricing');
-    navigate('/pricing');
-  };
-
   return (
-    <header className="shared-header">
-      <nav className="shared-nav">
-        <div className="shared-logo-container">
-          <Link to="/" className="shared-logo-text">Planfit</Link>
-        </div>
-        
-        <ul className="shared-nav-buttons">
-          {filteredNavigation.map(item => (
-            <li key={item.path} className="shared-nav-btn">
-              <Link to={item.path} className="shared-nav-btn-text">
-                {item.name}
-              </Link>
-            </li>
+    <header className={`spatial-shared-header ${scrolled ? 'header-scrolled' : ''}`}>
+      <nav className="spatial-shared-dock">
+        <Link to="/" className="spatial-shared-logo">
+          <span className="logo-sparkle">✦</span>
+          <span className="logo-text">Planfit</span>
+          <span className="logo-genz-badge">AI 2.0</span>
+        </Link>
+
+        <button 
+          className="spatial-shared-toggle"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-label="Toggle navigation"
+        >
+          <span className={`burger-bar ${mobileMenuOpen ? 'open' : ''}`}></span>
+          <span className={`burger-bar ${mobileMenuOpen ? 'open' : ''}`}></span>
+          <span className={`burger-bar ${mobileMenuOpen ? 'open' : ''}`}></span>
+        </button>
+
+        <div className={`spatial-shared-links ${mobileMenuOpen ? 'mobile-open' : ''}`}>
+          {navigationItems.map(item => (
+            <Link 
+              key={item.path}
+              to={item.path} 
+              className={`spatial-shared-item ${currentPath === item.path ? 'active' : ''}`}
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <span>{item.name}</span>
+              {item.hot && <span className="nav-hot-dot"></span>}
+            </Link>
           ))}
-          
-          <li className="shared-nav-btn">
+
+          <div className="spatial-shared-actions">
             <Link 
               to="/pricing"
-              className={`shared-cta-btn ${isPremium() ? 'premium-active' : ''}`}
+              className={`spatial-plan-btn ${isPremium() ? 'premium-active-glow' : 'get-plan-glow'}`}
+              onClick={() => setMobileMenuOpen(false)}
             >
-              <span className="shared-nav-btn-text">
-                {isPremium() ? 'Premium Active' : 'Get your plan now'}
-              </span>
-              {isPremium() && <span className="premium-badge">✓</span>}
+              <span>{isPremium() ? '✦ Pro Active' : '⚡ Get Pro Plan'}</span>
             </Link>
-          </li>
 
-          {!user && (
-            <li className="shared-nav-btn">
-              <Link to="/login" className="shared-nav-btn-text">
-                Sign in
+            {!user ? (
+              <Link 
+                to="/login" 
+                className="spatial-shared-signin"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <span>Sign in</span>
               </Link>
-            </li>
-          )}
-
-          {user && (
-            <li className="shared-nav-btn">
-              <ProfileDropdown />
-            </li>
-          )}
-        </ul>
+            ) : (
+              <div className="spatial-shared-profile">
+                <ProfileDropdown />
+              </div>
+            )}
+          </div>
+        </div>
       </nav>
     </header>
   );
 };
 
-export default SharedHeader; 
+export default SharedHeader;
