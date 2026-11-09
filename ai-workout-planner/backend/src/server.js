@@ -1,17 +1,19 @@
 require('dotenv').config();
 const http = require('http');
 const app = require('./app');
-const connectDB = require('./utils/db');
+const { connectDB } = require('./utils/db');
 
 const PORT = process.env.PORT || 5000;
 
 (async () => {
   try {
-    await connectDB();
     const server = http.createServer(app);
     server.listen(PORT, () => {
       console.log(`🚀 Server listening on http://localhost:${PORT}`);
     });
+
+    // Connect to database asynchronously
+    await connectDB();
 
     // Graceful shutdown
     const shutdown = (signal) => {

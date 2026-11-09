@@ -6,6 +6,8 @@ const morgan = require('morgan');
 const compression = require('compression');
 const mongoSanitize = require('express-mongo-sanitize');
 const cookieParser = require('cookie-parser');
+const mongoose = require('mongoose');
+const { getDbError } = require('./utils/db');
 
 // Routes
 const authRoutes = require('./routes/authRoutes');
@@ -62,12 +64,29 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // Health check endpoint
-app.get('/health', (req, res) => {
-  res.status(200).json({
-    status: 'success',
-    message: 'Server is healthy',
+app.get(['/health', '/api/health'], (req, res) => {
+  const isDbConnected = mongoose.connection.readyState === 1;
+  res.status(isDbConnected ? 200 : 503).json({
+    status: isDbConnected ? 'success' : 'degraded',
+    message: isDbConnected ? 'Server and database are healthy' : 'Server is running, but database is disconnected',
+    database: isDbConnected ? 'connected' : 'disconnected',
+    dbError: getDbError() || null,
     timestamp: new Date().toISOString()
   });
+});
+
+// Database connection check middleware for API requests
+app.use('/api', (req, res, next) => {
+  if (req.path === '/health') return next();
+  if (mongoose.connection.readyState !== 1) {
+    const errorMsg = getDbError();
+    const details = errorMsg ? `: ${errorMsg}` : '';
+    return res.status(503).json({
+      success: false,
+      message: `Database connection unavailable${details}. Please check your MONGODB_URI in backend/.env.`
+    });
+  }
+  next();
 });
 
 // API routes

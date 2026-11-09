@@ -77,7 +77,10 @@ function Signup() {
       }
     } catch (err) {
       console.error('Signup error:', err);
-      setError(err.response?.data?.message || 'Registration failed. Please check your information.');
+      const msg = !err.response
+        ? 'Cannot connect to backend server. Please ensure the backend server is running on port 5000.'
+        : (err.response?.data?.message || 'Registration failed. Please check your information.');
+      setError(msg);
     } finally {
       setLoading(false);
     }
@@ -110,7 +113,10 @@ function Signup() {
       navigate('/');
     } catch (err) {
       console.error('OTP verification error:', err);
-      setError(err.response?.data?.message || 'Invalid or expired verification code');
+      const msg = !err.response
+        ? 'Cannot connect to backend server. Please ensure the backend server is running on port 5000.'
+        : (err.response?.data?.message || 'Invalid or expired verification code');
+      setError(msg);
     } finally {
       setLoading(false);
     }
@@ -130,7 +136,10 @@ function Signup() {
       setSuccessMsg(response.data?.message || 'A fresh verification code was sent to your email.');
       setResendCooldown(60);
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to resend code.');
+      const msg = !err.response
+        ? 'Cannot connect to backend server. Please ensure the backend server is running on port 5000.'
+        : (err.response?.data?.message || 'Failed to resend code.');
+      setError(msg);
     } finally {
       setLoading(false);
     }

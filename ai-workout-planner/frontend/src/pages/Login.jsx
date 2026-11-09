@@ -66,7 +66,9 @@ function Login() {
         }
       })
       .catch((err) => {
-        const message = err.response?.data?.message || 'Invalid credentials. Please try again.';
+        const message = !err.response
+          ? 'Cannot connect to backend server. Please ensure the backend server is running on port 5000.'
+          : (err.response?.data?.message || 'Invalid credentials. Please try again.');
         setError(message);
       })
       .finally(() => setLoading(false));
@@ -99,7 +101,9 @@ function Login() {
         navigate('/');
       })
       .catch((err) => {
-        const message = err.response?.data?.message || 'Invalid or expired OTP. Please try again.';
+        const message = !err.response
+          ? 'Cannot connect to backend server. Please ensure the backend server is running on port 5000.'
+          : (err.response?.data?.message || 'Invalid or expired OTP. Please try again.');
         setError(message);
       })
       .finally(() => setLoading(false));
@@ -120,7 +124,9 @@ function Login() {
         setResendCooldown(60);
       })
       .catch((err) => {
-        const message = err.response?.data?.message || 'Failed to resend code.';
+        const message = !err.response
+          ? 'Cannot connect to backend server. Please ensure the backend server is running on port 5000.'
+          : (err.response?.data?.message || 'Failed to resend code.');
         setError(message);
       })
       .finally(() => setLoading(false));

@@ -28,7 +28,10 @@ function ForgotPassword() {
       setSuccessMsg(res.data?.message || 'Password reset code sent to your email.');
       setStep('reset');
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to send reset code. Please try again.');
+      const msg = !err.response
+        ? 'Cannot connect to backend server. Please ensure the backend server is running on port 5000.'
+        : (err.response?.data?.message || 'Failed to send reset code. Please try again.');
+      setError(msg);
     } finally {
       setLoading(false);
     }
@@ -62,7 +65,10 @@ function ForgotPassword() {
         navigate('/login');
       }, 2000);
     } catch (err) {
-      setError(err.response?.data?.message || 'Invalid or expired code. Please try again.');
+      const msg = !err.response
+        ? 'Cannot connect to backend server. Please ensure the backend server is running on port 5000.'
+        : (err.response?.data?.message || 'Invalid or expired code. Please try again.');
+      setError(msg);
     } finally {
       setLoading(false);
     }
