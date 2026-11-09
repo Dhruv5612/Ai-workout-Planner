@@ -47,29 +47,29 @@ function Login() {
       emailOrUsername: formData.emailOrUsername,
       password: formData.password,
     })
-    .then((res) => {
-      if (res.data?.requireOtp) {
-        setTargetEmail(res.data.email);
-        setStep('otp');
-        setSuccessMsg(res.data.message || `Verification code sent to ${res.data.email}`);
-        setResendCooldown(60);
-      } else {
-        // Fallback for direct token response
-        const token = res.data?.token;
-        const user = res.data?.user;
-        if (token) localStorage.setItem('token', token);
-        if (user) {
-          setUser(user);
-          if (user.subscription) setSubscription(user.subscription);
+      .then((res) => {
+        if (res.data?.requireOtp) {
+          setTargetEmail(res.data.email);
+          setStep('otp');
+          setSuccessMsg(res.data.message || `Verification code sent to ${res.data.email}`);
+          setResendCooldown(60);
+        } else {
+          // Fallback for direct token response
+          const token = res.data?.token;
+          const user = res.data?.user;
+          if (token) localStorage.setItem('token', token);
+          if (user) {
+            setUser(user);
+            if (user.subscription) setSubscription(user.subscription);
+          }
+          navigate('/');
         }
-        navigate('/');
-      }
-    })
-    .catch((err) => {
-      const message = err.response?.data?.message || 'Invalid credentials. Please try again.';
-      setError(message);
-    })
-    .finally(() => setLoading(false));
+      })
+      .catch((err) => {
+        const message = err.response?.data?.message || 'Invalid credentials. Please try again.';
+        setError(message);
+      })
+      .finally(() => setLoading(false));
   };
 
   // Step 2: Submit OTP
@@ -88,21 +88,21 @@ function Login() {
       email: targetEmail,
       otp: otp.trim()
     })
-    .then((res) => {
-      const token = res.data?.token;
-      const user = res.data?.user;
-      if (token) localStorage.setItem('token', token);
-      if (user) {
-        setUser(user);
-        if (user.subscription) setSubscription(user.subscription);
-      }
-      navigate('/');
-    })
-    .catch((err) => {
-      const message = err.response?.data?.message || 'Invalid or expired OTP. Please try again.';
-      setError(message);
-    })
-    .finally(() => setLoading(false));
+      .then((res) => {
+        const token = res.data?.token;
+        const user = res.data?.user;
+        if (token) localStorage.setItem('token', token);
+        if (user) {
+          setUser(user);
+          if (user.subscription) setSubscription(user.subscription);
+        }
+        navigate('/');
+      })
+      .catch((err) => {
+        const message = err.response?.data?.message || 'Invalid or expired OTP. Please try again.';
+        setError(message);
+      })
+      .finally(() => setLoading(false));
   };
 
   // Resend OTP
@@ -115,15 +115,15 @@ function Login() {
       email: targetEmail,
       purpose: 'login'
     })
-    .then((res) => {
-      setSuccessMsg(res.data?.message || 'A fresh verification code has been sent!');
-      setResendCooldown(60);
-    })
-    .catch((err) => {
-      const message = err.response?.data?.message || 'Failed to resend code.';
-      setError(message);
-    })
-    .finally(() => setLoading(false));
+      .then((res) => {
+        setSuccessMsg(res.data?.message || 'A fresh verification code has been sent!');
+        setResendCooldown(60);
+      })
+      .catch((err) => {
+        const message = err.response?.data?.message || 'Failed to resend code.';
+        setError(message);
+      })
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -139,7 +139,7 @@ function Login() {
               <h1>Welcome Back</h1>
               <p>Sign in with your email & password to receive your login code</p>
             </div>
-            
+
             <form onSubmit={handleCredentialsSubmit} className="auth-form">
               <div className="form-group">
                 <label htmlFor="emailOrUsername">Email or Username</label>
@@ -153,7 +153,7 @@ function Login() {
                   required
                 />
               </div>
-              
+
               <div className="form-group">
                 <label htmlFor="password">Password</label>
                 <input
@@ -166,7 +166,7 @@ function Login() {
                   required
                 />
               </div>
-              
+
               <div className="form-options">
                 <label className="checkbox-label">
                   <input type="checkbox" defaultChecked />
@@ -176,14 +176,14 @@ function Login() {
                   Forgot password?
                 </Link>
               </div>
-              
+
               {error && <div className="error-message">{error}</div>}
 
               <button type="submit" className="auth-button" disabled={loading}>
                 {loading ? 'Sending Code...' : 'Continue with OTP →'}
               </button>
             </form>
-            
+
             <div className="auth-footer">
               <p>
                 Don't have an account?{' '}
@@ -235,7 +235,7 @@ function Login() {
 
               {error && <div className="error-message">{error}</div>}
               {successMsg && (
-                <div 
+                <div
                   style={{
                     padding: '0.85rem 1.25rem',
                     borderRadius: '14px',

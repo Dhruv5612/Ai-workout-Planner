@@ -52,9 +52,7 @@ export const AuthProvider = ({ children }) => {
       }
     },
     isPremium: () => {
-      // Hardcoded whitelist for complimentary premium access
-      const premiumWhitelist = ['dhruvkamariya7@gmail.com'];
-      if (user && premiumWhitelist.includes(user.email)) {
+      if (user && (user.role === 'admin' || user.isPremium)) {
         return true;
       }
 

@@ -5,11 +5,15 @@ dotenv.config();
 
 const connectDB = async () => {
   try {
-    const mongoUri = process.env.MONGODB_URI || "mongodb+srv://Dhruv5612:Dhruv5612@sgp.kiylrqc.mongodb.net/?retryWrites=true&w=majority&appName=sgp";
+    const mongoUri = process.env.MONGODB_URI;
+    if (!mongoUri) {
+      console.error('❌ MONGODB_URI is not defined in environment variables. Please configure it in your .env file.');
+      process.exit(1);
+    }
+
     const conn = await mongoose.connect(mongoUri);
 
-    console.log(`
-        MongoDB Connected: ${conn.connection.host}`);
+    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
 
     // Handle connection events
     mongoose.connection.on('error', (err) => {
@@ -37,24 +41,5 @@ const connectDB = async () => {
     process.exit(1);
   }
 };
-
-
-// const connectDB = async () => {
-//   const mongoURI = process.env.MONGODB_URI;
-
-//   if (!mongoURI) {
-//     console.error("❌ MONGO_URI is not defined in .env file");
-//     process.exit(1);
-//   }
-
-//   try {
-//     await mongoose.connect(mongoURI);
-//     console.log("✅ Connected to MongoDB");
-//   } catch (err) {
-//     console.error("❌ Error connecting to MongoDB:", err.message);
-//     process.exit(1);
-//   }
-// };
-
 
 module.exports = connectDB;

@@ -10,16 +10,16 @@ module.exports = {
   // User models
   User,
   Otp,
-  
+
   // Workout models
   Exercise,
   WorkoutPlan,
   WorkoutSession,
   WorkoutTemplate,
-  
+
   // Meal models
   Meal,
-  
+
   // Progress models
   Progress
 };

@@ -13,7 +13,11 @@ async function run() {
   }
 
   try {
-    const mongoUri = process.env.MONGODB_URI || 'mongodb+srv://Dhruv5612:Dhruv5612@sgp.kiylrqc.mongodb.net/?retryWrites=true&w=majority&appName=sgp';
+    const mongoUri = process.env.MONGODB_URI;
+    if (!mongoUri) {
+      console.error('❌ MONGODB_URI is not defined in environment variables. Please set it in your .env file.');
+      process.exit(1);
+    }
     await mongoose.connect(mongoUri);
     console.log('✅ Connected to MongoDB');
 
@@ -67,5 +71,3 @@ async function run() {
 }
 
 run();
-
-
